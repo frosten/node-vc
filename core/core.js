@@ -3,6 +3,7 @@ var fs = require('fs');
 var url = require("url");
 var qs = require("querystring");
 var path = require("path");
+
 var mime = require('./mime');
 var config = require('../config.js');
 var controller = require('./controller.js');
@@ -60,8 +61,8 @@ var controller = require('./controller.js');
         }
 
         //TODO: Find Controller from Routes
-        if (controllers[cls] && (typeof controllers[cls][method] === 'function' || typeof controllers[cls].hasOwnProperty('_any'))) {
-
+        if (controllers[cls] &&
+            (typeof controllers[cls][method] === 'function' || typeof controllers[cls].hasOwnProperty('_any'))) {
             if (typeof controllers[cls][method] !== 'function') {
                 method = '_any';
             }
@@ -114,24 +115,25 @@ var controller = require('./controller.js');
 
         var uri = url.parse(request.url).pathname,
             re = /(?:\.([^.]+))?$/;
-        //check file
-        fs.exists(config.basePath + request.url, function (exists) {
 
+        //check file
+        fs.exists(config.basePath + uri, function (exists) {
             var isVirtualPAth = typeof re.exec(uri)[1] === 'undefined';
             if (isVirtualPAth) {
+                util.log('is virutal process request'+uri);
                 processRequest(request, response);
                 return;
             }
 
             if (!exists) {
                 response.writeHeader(404, {});
-                response.end();
+                response.end(config._404);
                 return;
             } else {
                 response.writeHeader(responseStatusCode, {
                     'Content-Type': contentType
                 });
-                var file = fs.readFileSync(config.basePath + request.url);
+                var file = fs.readFileSync(config.basePath + uri);
                 response.end(file, 'binary');
                 return;
             }

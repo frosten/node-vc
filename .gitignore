@@ -5,3 +5,4 @@
 /node_modules/
 /.sync/
 /package-finder.js
+/.ftpsync_settings

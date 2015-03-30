@@ -5,7 +5,9 @@ var MIME_TYPES = {
     ico: ['image/x-icon', 'binary'],
     css: ['text/css'],
     js: ['text/javascript'],
-    woff: ['application/octet-stream']
+    woff: ['application/octet-stream'],
+    woff2: ['application/font-woff2']
+
 }
 
 exports.TYPE = MIME_TYPES;

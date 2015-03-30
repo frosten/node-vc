@@ -1,0 +1,13 @@
+{
+    "name": "node-vc",
+    "description": "Node Web Server like ASP.net MVC Razor",
+    "version": "0.0.1",
+    "author": "S. Ferit Arslan <feritarslan@gmail.com>",
+    "licence": "MIT",
+    "repository": "frosten/node-vc",
+    "dependencies": {
+        "request": "2.51.0",
+        "tough-cookie": "0.12.1",
+        "vash": "0.8.3"
+    }
+}

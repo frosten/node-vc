@@ -4,7 +4,6 @@ var fs = require('fs');
 
 (function () {
     'use strict';
-
     var template = {
         compile: function (content, model) {
             var tpl = vash.compile(content);
