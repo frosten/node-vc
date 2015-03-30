@@ -4,8 +4,7 @@
 /bower_components/
 /node_modules/
 /.sync/
-/package-finder.js
-/.ftpsync_settings
-/.jshintrc
-/.brackets.json
-
+package-finder.js
+.ftpsync_settings
+.jshintrc
+.brackets.json
