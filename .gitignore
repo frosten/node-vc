@@ -6,3 +6,6 @@
 /.sync/
 /package-finder.js
 /.ftpsync_settings
+/.jshintrc
+/.brackets.json
+
