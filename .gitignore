@@ -1,10 +1,8 @@
-# https://git-scm.com/docs/gitignore
-# https://help.github.com/articles/ignoring-files
-# Example .gitignore files: https://github.com/github/gitignore
-/bower_components/
-/node_modules/
-/.sync/
+node_modules
+.sync
 package-finder.js
 .ftpsync_settings
 .jshintrc
 .brackets.json
+.DS_Store*
+._*
