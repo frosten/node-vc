@@ -1,0 +1,17 @@
+body {
+    background-color:azure
+    color: black;
+    font-family: "Source Sans Pro", "Helvetica",  sans-serif;
+}
+
+.absolute-center {
+   bottom: 0;
+  height:100px;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+}
+

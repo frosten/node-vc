@@ -5,19 +5,17 @@ var fs = require('fs');
 (function () {
     'use strict';
     var template = {
-        compile: function (content, model) {
-            var tpl = vash.compile(content);
-            var out = tpl(model);
-            return out;
-        },
-        load: function (file, callback) {
-            fs.exists(config.basePath + file, function (exists) {
+        load: function (file, model, cb) {
+            var filepath = config.basePath + file;
+            fs.exists(filepath, function (exists) {
                 if (exists) {
-                    fs.readFile(config.basePath + file, 'utf8', function (err, data) {
-                        callback(data);
+                    vash.renderFile(filepath, model, function (err, tpl) {
+                        if (err) throw err;
+                        cb(tpl);
                     });
+                    
                 } else {
-                    callback("template not found");
+                    cb("template:404");
                 }
             });
         }

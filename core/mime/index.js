@@ -82,7 +82,6 @@ var MIME_TYPES = {
    "etx": ["text/x-setext"],
    "evy": ["application/envoy"],
    "exe": ["application/octet-stream"],
-   "exe.config": ["text/xml"],
    "fdf": ["application/vnd.fdf"],
    "fif": ["application/fractals"],
    "fla": ["application/octet-stream"],
@@ -329,7 +328,6 @@ var MIME_TYPES = {
    "ico": ['image/x-icon', 'binary'],
    "css": ['text/css'],
    "js": ['text/javascript'],
-   "woff": ['application/octet-stream'],
    "wps": ["application/vnd.ms-works"],
    "wri": ["application/x-mswrite"],
    "wrl": ["x-world/x-vrml"],
@@ -371,6 +369,6 @@ var MIME_TYPES = {
    "xwd": ["image/x-xwindowdump"],
    "z": ["application/x-compress"],
    "zip": ["application/x-zip-compressed"]
-}
+};
 
 exports.TYPE = MIME_TYPES;
