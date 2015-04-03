@@ -1,4 +1,5 @@
-var template = require('../../../core/template');
+var papirus = require('papirus');
+
 var model = require('../../model/default.js');
 var httpRequest = require("request");
 
@@ -16,7 +17,8 @@ var httpRequest = require("request");
             breakIfRequestJSON(this);
             
             var self = this;
-            template.load('/app/view/index.html', model, function (html) {
+            console.log(papirus);
+            papirus.template.load('/app/view/index.html', model, function (html) {
                 self.response.end(html);
             });
         }

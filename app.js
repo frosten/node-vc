@@ -19,24 +19,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var http = require('http');
-var config = require('./config.js');
-var controller = require('./core/controller.js');
-var core = require('./core/core.js');
-var util = require('util');
+var papirus = require('papirus');
 
-(function () {
-    'use strict';
-
-    controller.register();
-
-    var httpRequestHandler = function (request, response) {
-        core.init(request, response);
-    };
-    
-    http.createServer(httpRequestHandler)
-        .listen(config.defaultHttpPort);
-
-    util.log('Application has been initialized.');
-
-}());
+console.log(papirus);
+papirus.start();
