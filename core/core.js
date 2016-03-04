@@ -24,19 +24,22 @@ var controller = require('./controller.js');
         var processResult = '';
         var parsedUrl = url.parse(request.url, false);
         var paths = parsedUrl.pathname.split('/').splice(1);
-        var queryData = parsedUrl.query;
         var cls, method, params;
 
         var setResponse = function (parameters) {
-
+            
             response.writeHeader(200, {
                 'Content-Type': 'text/html'
             });
+
+
+            var formData = typeof(parameters) != 'undefined' && parameters.hasOwnProperty("formData") ? parameters.formData : [];
 
             processResult = controllers[cls][method].call({
                 request: request,
                 response: response,
                 queryString: qs.parse(parsedUrl.query),
+                form: formData,
                 parsedUrl: parsedUrl
             });
 
@@ -77,8 +80,8 @@ var controller = require('./controller.js');
                     data += chunk;
                 });
                 request.on('end', function () {
-                    var json = qs.parse(data);
-                    setResponse();
+                    var formData = qs.parse(data);
+                    setResponse({formData: formData });
                 });
                 break;
             }
@@ -93,8 +96,6 @@ var controller = require('./controller.js');
         }
     }
 
-    var rewritedUrl = false;
-
     function getContentType(path) {
         var fileExtension = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
         if (typeof mime.TYPE[fileExtension] === 'undefined') {
@@ -108,6 +109,8 @@ var controller = require('./controller.js');
         var contentType = getContentType(request.url)[0],
             responseStatusCode = 200; //default
 
+        util.log(contentType);
+
         if (request.url === '/') {
             processRequest(request, response);
             return;
@@ -116,6 +119,7 @@ var controller = require('./controller.js');
         var uri = url.parse(request.url).pathname,
             re = /(?:\.([^.]+))?$/;
 
+        util.log(uri);
         //check file
         fs.exists(config.basePath + uri, function (exists) {
             var isVirtualPAth = typeof re.exec(uri)[1] === 'undefined';
