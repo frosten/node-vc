@@ -16,8 +16,8 @@ var httpRequest = require("request");
             breakIfRequestJSON(this);
             
             var self = this;
-            template.load('/app/view/index.html', model, function (html) {
-                self.response.end(html);
+            template.load('/app/view/index.html', function (html) {
+                self.response.end(template.compile(html, { Message: 'World' }));
             });
         }
     };

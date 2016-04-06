@@ -3,12 +3,11 @@ var fs = require('fs');
 var url = require("url");
 var qs = require("querystring");
 var path = require("path");
-
 var mime = require('./mime');
 var config = require('../config.js');
 var controller = require('./controller.js');
 
-(function () {
+(function() {
     'use strict';
 
     var controllers = controller.getControllers();
@@ -24,16 +23,16 @@ var controller = require('./controller.js');
         var processResult = '';
         var parsedUrl = url.parse(request.url, false);
         var paths = parsedUrl.pathname.split('/').splice(1);
+        var queryData = parsedUrl.query;
         var cls, method, params;
 
-        var setResponse = function (parameters) {
-            
+        var setResponse = function(parameters) {
+
+            var formData = typeof (parameters) != 'undefined' && parameters.hasOwnProperty("formData") ? parameters.formData : [];
+
             response.writeHeader(200, {
                 'Content-Type': 'text/html'
             });
-
-
-            var formData = typeof(parameters) != 'undefined' && parameters.hasOwnProperty("formData") ? parameters.formData : [];
 
             processResult = controllers[cls][method].call({
                 request: request,
@@ -64,26 +63,26 @@ var controller = require('./controller.js');
         }
 
         //TODO: Find Controller from Routes
-        if (controllers[cls] &&
-            (typeof controllers[cls][method] === 'function' || typeof controllers[cls].hasOwnProperty('_any'))) {
+        if (controllers[cls] && (typeof controllers[cls][method] === 'function' || typeof controllers[cls].hasOwnProperty('_any'))) {
+
             if (typeof controllers[cls][method] !== 'function') {
                 method = '_any';
             }
 
             switch (request.method) {
-            case 'GET':
-                setResponse();
-                break;
-            case 'POST':
-                var data = '';
-                request.on('data', function (chunk) {
-                    data += chunk;
-                });
-                request.on('end', function () {
-                    var formData = qs.parse(data);
-                    setResponse({formData: formData });
-                });
-                break;
+                case 'GET':
+                    setResponse();
+                    break;
+                case 'POST':
+                    var data = '';
+                    request.on('data', function(chunk) {
+                        data += chunk;
+                    });
+                    request.on('end', function() {
+                        var formData = qs.parse(data);
+                        setResponse({ formData: formData });
+                    });
+                    break;
             }
         } else {
             /**
@@ -95,6 +94,8 @@ var controller = require('./controller.js');
             response.end(config._404);
         }
     }
+
+    var rewritedUrl = false;
 
     function getContentType(path) {
         var fileExtension = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
@@ -109,8 +110,6 @@ var controller = require('./controller.js');
         var contentType = getContentType(request.url)[0],
             responseStatusCode = 200; //default
 
-        util.log(contentType);
-
         if (request.url === '/') {
             processRequest(request, response);
             return;
@@ -118,26 +117,24 @@ var controller = require('./controller.js');
 
         var uri = url.parse(request.url).pathname,
             re = /(?:\.([^.]+))?$/;
-
-        util.log(uri);
         //check file
-        fs.exists(config.basePath + uri, function (exists) {
+        fs.exists(config.basePath + request.url, function(exists) {
+
             var isVirtualPAth = typeof re.exec(uri)[1] === 'undefined';
             if (isVirtualPAth) {
-                util.log('is virutal process request'+uri);
                 processRequest(request, response);
                 return;
             }
 
             if (!exists) {
                 response.writeHeader(404, {});
-                response.end(config._404);
+                response.end();
                 return;
             } else {
                 response.writeHeader(responseStatusCode, {
                     'Content-Type': contentType
                 });
-                var file = fs.readFileSync(config.basePath + uri);
+                var file = fs.readFileSync(config.basePath + request.url);
                 response.end(file, 'binary');
                 return;
             }
@@ -146,4 +143,4 @@ var controller = require('./controller.js');
 
     exports.init = init;
 
-}());
+} ());

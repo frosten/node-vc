@@ -23,20 +23,18 @@ var http = require('http');
 var config = require('./config.js');
 var controller = require('./core/controller.js');
 var core = require('./core/core.js');
-var util = require('util');
+var init = require('./app/init.js');
 
-(function () {
+(function() {
     'use strict';
 
     controller.register();
 
-    var httpRequestHandler = function (request, response) {
+    var httpRequestHandler = function(request, response) {
         core.init(request, response);
     };
-    
-    http.createServer(httpRequestHandler)
-        .listen(config.defaultHttpPort);
-
-    util.log('Application has been initialized.');
-
-}());
+    var app = http.createServer(httpRequestHandler);
+    app.listen(config.defaultHttpPort);
+    console.log('started');
+    init.start();
+} ());
