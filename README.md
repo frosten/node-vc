@@ -1,4 +1,4 @@
-# node-vc
+# node-vc a.k.a (nvc)
 
 minimal web application framework for node.js (like asp.net, similar express)
 
