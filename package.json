@@ -1,7 +1,7 @@
 {
     "name": "node-vc",
-    "description": "Node Web Server like ASP.net MVC Razor",
-    "version": "0.0.1",
+    "description": "minimal web application framework for node.js (like asp.net mvc project structure, similar express)",
+    "version": "0.0.4",
     "author": "S. Ferit Arslan <feritarslan@gmail.com>",
     "licence": "MIT",
     "repository": "frosten/node-vc",
