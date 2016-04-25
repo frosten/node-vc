@@ -7,11 +7,19 @@ var mime = require('./mime');
 var config = require('../config.js');
 var controller = require('./controller.js');
 
-(function() {
+(function () {
     'use strict';
 
     var controllers = controller.getControllers();
     var incomingTotalRequest = 0;
+
+    function write404(response) {
+        response.writeHeader(404, {
+            'Content-Type': 'text/html'
+        });
+        response.end(config._404);
+    }
+
     /**
      * @brief processing request
      * @param [in] object request Http Request Object
@@ -26,7 +34,7 @@ var controller = require('./controller.js');
         var queryData = parsedUrl.query;
         var cls, method, params;
 
-        var setResponse = function(parameters) {
+        var setResponse = function (parameters) {
 
             var formData = typeof (parameters) != 'undefined' && parameters.hasOwnProperty("formData") ? parameters.formData : [];
 
@@ -67,6 +75,10 @@ var controller = require('./controller.js');
 
             if (typeof controllers[cls][method] !== 'function') {
                 method = '_any';
+                if (typeof controllers[cls][method] !== 'function') {
+                    write404(response);
+                    return;
+                }
             }
 
             switch (request.method) {
@@ -75,10 +87,10 @@ var controller = require('./controller.js');
                     break;
                 case 'POST':
                     var data = '';
-                    request.on('data', function(chunk) {
+                    request.on('data', function (chunk) {
                         data += chunk;
                     });
-                    request.on('end', function() {
+                    request.on('end', function () {
                         var formData = qs.parse(data);
                         setResponse({ formData: formData });
                     });
@@ -88,10 +100,7 @@ var controller = require('./controller.js');
             /**
              * Catching not found controller
              */
-            response.writeHeader(404, {
-                'Content-Type': 'text/html'
-            });
-            response.end(config._404);
+            write404(response);
         }
     }
 
@@ -118,7 +127,7 @@ var controller = require('./controller.js');
         var uri = url.parse(request.url).pathname,
             re = /(?:\.([^.]+))?$/;
         //check file
-        fs.exists(config.basePath + request.url, function(exists) {
+        fs.exists(config.basePath + request.url, function (exists) {
 
             var isVirtualPAth = typeof re.exec(uri)[1] === 'undefined';
             if (isVirtualPAth) {
