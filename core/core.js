@@ -115,8 +115,12 @@ var controller = require('./controller.js');
     }
 
     function init(request, response) {
+
+   var uri = url.parse(request.url).pathname,
+            re = /(?:\.([^.]+))?$/;
+
         //check content type
-        var contentType = getContentType(request.url)[0],
+        var contentType = getContentType(uri)[0],
             responseStatusCode = 200; //default
 
         if (request.url === '/') {
@@ -124,11 +128,10 @@ var controller = require('./controller.js');
             return;
         }
 
-        var uri = url.parse(request.url).pathname,
-            re = /(?:\.([^.]+))?$/;
+     
         //check file
-        fs.exists(config.basePath + request.url, function (exists) {
 
+        fs.exists(config.basePath +uri.replace('/', '\\'), function (exists) {
             var isVirtualPAth = typeof re.exec(uri)[1] === 'undefined';
             if (isVirtualPAth) {
                 processRequest(request, response);
@@ -143,7 +146,7 @@ var controller = require('./controller.js');
                 response.writeHeader(responseStatusCode, {
                     'Content-Type': contentType
                 });
-                var file = fs.readFileSync(config.basePath + request.url);
+                var file = fs.readFileSync(config.basePath + uri);
                 response.end(file, 'binary');
                 return;
             }
